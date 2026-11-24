@@ -1,0 +1,60 @@
+Week 3 – LLM Monitoring with MongoDB
+
+Objective
+To extend the provider-agnostic LLM client by monitoring API usage, response time, token consumption and estimated cost using MongoDB.
+
+
+Technologies Used
+- Python
+- Gemini API
+- Ollama (Llama 3.2)
+- MongoDB Atlas
+- PyMongo
+- Requests
+- Python-dotenv
+- Unittest
+
+
+Files Created
+- main.py – Main application to select the LLM provider and enter prompts.
+- llm_client.py – Handles Gemini and Ollama requests, token tracking, latency and cost estimation.
+- usage_logger.py – Connects to MongoDB Atlas and stores usage records.
+- test_client.py – Tests LLM response generation and usage logging.
+- requirements.txt – Contains required Python libraries.
+- .env – Stores API credentials, MongoDB URI and pricing configuration.
+- .gitignore – Prevents sensitive files and unnecessary files from being uploaded.
+
+
+What I Implemented
+1. Integrated Gemini and Ollama as LLM providers.
+2. Captured input and output token usage.
+3. Calculated total tokens for every request.
+4. Measured response latency.
+5. Estimated hosted API cost using configurable token rates.
+6. Connected Python to MongoDB Atlas.
+7. Stored successful and failed request details in MongoDB.
+8. Implemented request timeouts and retry handling.
+9. Added unit testing to verify the LLM client.
+
+
+What I Learned
+- How to monitor LLM API usage.
+- How token consumption affects API costs.
+- How to measure response latency.
+- How to connect Python applications to MongoDB Atlas.
+- How to store API usage records in a database.
+- How timeouts and retries help handle temporary failures.
+- How to test Python applications using unittest.
+
+
+Testing and Results
+- Unit test executed successfully.
+- MongoDB connection tested successfully.
+- Ollama generated responses successfully.
+- Token usage and request latency were captured.
+- Usage records were successfully logged in MongoDB.
+- Gemini requests were tested; temporary 503 service-unavailable errors occurred during testing.
+
+
+Conclusion
+Successfully developed an LLM monitoring system that tracks token usage, response latency and estimated API cost, and stores request details in MongoDB.
