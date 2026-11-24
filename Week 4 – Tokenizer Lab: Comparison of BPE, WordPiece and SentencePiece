@@ -1,0 +1,50 @@
+1. Introduction
+In this experiment, I learned about tokenization and compared three subword tokenization approaches: Byte Pair Encoding (BPE), WordPiece and SentencePiece.
+The experiment focused on understanding how different pretrained tokenizers split English, Telugu and Hindi text into smaller tokens.
+
+2. What I Did
+Created a Python project for comparing different tokenizers.
+Used the GPT-2 tokenizer for BPE.
+Used Multilingual BERT for WordPiece.
+Used XLM-R for SentencePiece.
+Tested the tokenizers using English, Telugu and Hindi sentences.
+Displayed the generated tokens, token IDs and total token count.
+Executed the program and compared the results produced by all three tokenizers.
+
+3. Project Structure
+
+week-4/
+├── tokenizer_comparison.py
+├── requirements.txt
+├── .gitignore
+└── README.md
+
+4. Technologies Used
+Python
+Hugging Face & Transformers
+SentencePiece
+GPT-2
+Multilingual BERT
+XLM-R
+VS Code
+
+5. What I Understood
+Tokenization: The process of breaking input text into smaller units called tokens.
+Tokens: A token can be a complete word, part of a word, punctuation mark or character-related unit.
+Token IDs: Each token is mapped to a numerical ID that a language model can process.
+BPE: Builds subword units by repeatedly merging frequently occurring adjacent symbol pairs.
+WordPiece: Uses a learned vocabulary and splits words into smaller pieces when the complete word is not available.
+SentencePiece: A language-independent framework that learns subword units directly from raw text.
+Token Count: Different tokenizers can produce different numbers of tokens for the same input text.
+
+6. Implementation and Execution
+
+I used three pretrained tokenizers:
+BPE – GPT-2 (gpt2)
+WordPiece – Multilingual BERT (bert-base-multilingual-cased)
+SentencePiece – XLM-R (xlm-roberta-base)
+I installed the required libraries using:
+pip install -r requirements.txt
+I executed the program using:
+python tokenizer_comparison.py
+The program loaded the three pretrained tokenizers and processed English, Telugu and Hindi sentences. It displayed the tokens, token IDs and token counts for each language.
