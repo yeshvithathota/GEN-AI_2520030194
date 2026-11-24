@@ -1,0 +1,36 @@
+1. Introduction
+In this experiment, I learned the basics of Large Language Models (LLMs) and how to interact with them through a Python application.
+The main aim was to understand how an application communicates with an LLM and receives responses based on user input.
+
+2. What I Did
+Created a Python project for making an LLM call.
+Understood the basic structure of an LLM-powered application.
+Learned how to provide input to a language model.
+Explored how the model processes the input and generates a response.
+Worked with Python files and project dependencies.
+Executed the program and observed the generated output.
+
+3. What I Understood
+Through this experiment, I understood:
+Large Language Models: LLMs are AI models that understand and generate human-like text.
+Prompt: A prompt is the input or instruction given to the model.
+LLM API: An API allows our Python application to communicate with a language model.
+Model Response: The model processes the prompt and sends a generated response back to the application.
+Python Integration: Python can be used to connect applications with LLM services.
+
+4. What I Learned
+How LLMs can be integrated into Python applications.
+How user input is sent to a language model.
+How to receive and display generated responses.
+The basic workflow of an LLM application.
+How to organize a Python project and manage dependencies.
+
+5. Challenges Faced
+During this experiment, I explored the setup required for running an LLM application, understood the project structure, and learned how to resolve basic execution and configuration issues.
+
+6. Learning Outcome
+By completing this experiment, I gained a basic understanding of LLM integration and how Python applications can communicate with language models to generate responses.
+This experiment helped me build a foundation for developing more advanced Generative AI applications in the upcoming practical sessions.
+
+
+   
