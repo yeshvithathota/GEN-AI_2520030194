@@ -1,0 +1,128 @@
+"""Run the Week 6 Llama 3.2 baseline evaluation (Release v0.1)."""
+import csv
+import json
+from datetime import datetime, timezone
+from pathlib import Path
+
+import requests
+
+OLLAMA_URL = "http://localhost:11434/api/generate"
+MODEL_NAME = "llama3.2"
+INPUT_FILE = Path(__file__).with_name("golden_set.json")
+OUTPUT_FILE = Path(__file__).with_name("baseline_results.csv")
+RELEASE = "v0.1"
+TIMEOUT_SECONDS = 120
+
+FIELDNAMES = [
+    "Question_ID", "Question", "Expected_Answer", "LLM_Answer",
+    "Matched_Keywords", "Missing_Keywords", "Score", "Status",
+    "Source", "Model", "Release",
+]
+
+
+def get_llm_answer(question):
+    """Ask the local Ollama model for one non-streaming answer."""
+    response = requests.post(
+        OLLAMA_URL,
+        json={
+            "model": MODEL_NAME,
+            "prompt": question,
+            "stream": False,
+            "options": {"temperature": 0},
+        },
+        timeout=TIMEOUT_SECONDS,
+    )
+    response.raise_for_status()
+    return response.json().get("response", "").strip()
+
+
+def calculate_score(answer, expected_keywords):
+    """Return keyword coverage percentage plus matched and missing keywords."""
+    normalized_answer = answer.casefold()
+    matched = [word for word in expected_keywords if word.casefold() in normalized_answer]
+    missing = [word for word in expected_keywords if word.casefold() not in normalized_answer]
+    score = round(100 * len(matched) / len(expected_keywords), 2) if expected_keywords else 0.0
+    return score, matched, missing
+
+
+def main():
+    with INPUT_FILE.open(encoding="utf-8") as file:
+        questions = json.load(file)
+
+    results = []
+    total_score = 0.0
+    successful_questions = 0
+
+    print("=" * 54)
+    print("WEEK 6 BASELINE EVALUATION — RELEASE v0.1")
+    print(f"Model: {MODEL_NAME}")
+    print(f"Questions: {len(questions)}")
+    print("=" * 54)
+
+    for index, item in enumerate(questions, start=1):
+        question_id = item["id"]
+        question = item["question"]
+        print(f"\n[{index}/{len(questions)}] {question_id}: {question}")
+        try:
+            answer = get_llm_answer(question)
+            score, matched, missing = calculate_score(answer, item["keywords"])
+            status = "PASS" if score >= 60 else "REVIEW"
+            total_score += score
+            successful_questions += 1
+            print(f"Answer: {answer}")
+            print(f"Expected: {item['expected_answer']}")
+            print(f"Matched keywords: {matched}")
+            print(f"Missing keywords: {missing}")
+            print(f"Keyword coverage: {score:.2f}% ({status})")
+            results.append({
+                "Question_ID": question_id,
+                "Question": question,
+                "Expected_Answer": item["expected_answer"],
+                "LLM_Answer": answer,
+                "Matched_Keywords": ", ".join(matched),
+                "Missing_Keywords": ", ".join(missing),
+                "Score": score,
+                "Status": status,
+                "Source": item["source"],
+                "Model": MODEL_NAME,
+                "Release": RELEASE,
+            })
+        except requests.RequestException as error:
+            print(f"Ollama request failed: {error}")
+            results.append({
+                "Question_ID": question_id,
+                "Question": question,
+                "Expected_Answer": item["expected_answer"],
+                "LLM_Answer": "",
+                "Matched_Keywords": "",
+                "Missing_Keywords": ", ".join(item["keywords"]),
+                "Score": 0,
+                "Status": "ERROR",
+                "Source": item["source"],
+                "Model": MODEL_NAME,
+                "Release": RELEASE,
+            })
+
+    with OUTPUT_FILE.open("w", newline="", encoding="utf-8-sig") as file:
+        writer = csv.DictWriter(file, fieldnames=FIELDNAMES)
+        writer.writeheader()
+        writer.writerows(results)
+
+    passed = sum(row["Status"] == "PASS" for row in results)
+    review = sum(row["Status"] == "REVIEW" for row in results)
+    errors = sum(row["Status"] == "ERROR" for row in results)
+    average = total_score / successful_questions if successful_questions else 0.0
+
+    print("\n" + "=" * 54)
+    print("BASELINE SUMMARY")
+    print(f"Release: {RELEASE}")
+    print(f"Successful responses: {successful_questions}/{len(questions)}")
+    print(f"Passed: {passed} | Review: {review} | Errors: {errors}")
+    print(f"Average keyword coverage: {average:.2f}%")
+    print(f"Evaluation date (UTC): {datetime.now(timezone.utc).isoformat(timespec='seconds')}")
+    print(f"Results saved to: {OUTPUT_FILE}")
+    print("=" * 54)
+
+
+if __name__ == "__main__":
+    main()
